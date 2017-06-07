@@ -5,8 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFbrowser"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="NotSoTotalCommander" Height="500" Width="600" WindowStartupLocation="CenterScreen">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <TreeView Name="treeView" Margin="3" SelectedItemChanged="treeViewSelectedItemChanged" MouseDoubleClick="mouse_DoubleClick" ></TreeView>
+        <RichTextBox Name="rightSide" Grid.Column="1" IsReadOnly="True" Margin="3" ></RichTextBox>
     </Grid>
 </Window>
