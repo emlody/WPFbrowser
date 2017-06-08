@@ -306,8 +306,9 @@ namespace WPFbrowser
                 }
             }
         }
+
         //obliczanie rozmiaru katalogu
-        public static long GetDirectorySize(string fullDirectoryPath)
+        private static long GetDirectorySize(string fullDirectoryPath)
         {
             long startDirectorySize = 0;
             if (!Directory.Exists(fullDirectoryPath))
