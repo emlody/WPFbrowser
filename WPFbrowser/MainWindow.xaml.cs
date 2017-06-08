@@ -123,6 +123,7 @@ namespace WPFbrowser
                 directoryInfo = ((FileInfo)item.Tag).Directory;
             }
             if (object.ReferenceEquals(directoryInfo, null)) return;
+
             foreach (var directory in directoryInfo.GetDirectories())
             {   
                     var isHidden = (directory.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden;
@@ -207,10 +208,12 @@ namespace WPFbrowser
             //jezeli katalog wypluj
             if (tvi.Tag is DirectoryInfo)
             {
+                string dPath = ((DirectoryInfo)tvi.Tag).FullName;
 
                 rightSide.AppendText($"\nNazwa folderu: {((DirectoryInfo)tvi.Tag).Name}");
                 rightSide.AppendText($"\nData utworzenia: {((DirectoryInfo)tvi.Tag).CreationTime}");
                 rightSide.AppendText($"\nData modyfikacji: {((DirectoryInfo)tvi.Tag).LastWriteTime}");
+                rightSide.AppendText($"\nRozmiar katalogu: {GetDirectorySize(dPath)/1024/1024} MB");
                 rightSide.AppendText($"\nScieżka: {((DirectoryInfo)tvi.Tag).FullName}");
                 rightSide.AppendText($"\nAtrybuty: {((DirectoryInfo)tvi.Tag).Attributes}");
                 file = false;
@@ -224,7 +227,7 @@ namespace WPFbrowser
                 gpath = ((FileInfo)tvi.Tag).FullName;
                 file = true;
 
-                if ((ext.Contains(".txt")) || (ext.Contains(".html")) || (ext.Contains(".css")) || (ext.Contains(".log")))
+                if ((ext.Contains(".txt")) || (ext.Contains(".html")) || (ext.Contains(".css")) || (ext.Contains(".sql")))
                 {
                     int counter = 0;
                     string line, bufor=null;
@@ -294,6 +297,7 @@ namespace WPFbrowser
             {
                 try
                 {
+                    rightSide.Document.Blocks.Clear();
                     p.Start();
                 }
                 catch (Exception)
@@ -301,7 +305,24 @@ namespace WPFbrowser
                     rightSide.AppendText("Błąd");
                 }
             }
-
         }
+        //obliczanie rozmiaru katalogu
+        public static long GetDirectorySize(string fullDirectoryPath)
+        {
+            long startDirectorySize = 0;
+            if (!Directory.Exists(fullDirectoryPath))
+                return startDirectorySize; 
+
+            var currentDirectory = new DirectoryInfo(fullDirectoryPath);
+            
+            currentDirectory.GetFiles().ToList().ForEach(f => startDirectorySize += f.Length);
+
+            
+            currentDirectory.GetDirectories().ToList()
+                .ForEach(d => startDirectorySize += GetDirectorySize(d.FullName));
+
+            return startDirectorySize; 
+        }
+
     }
 }
