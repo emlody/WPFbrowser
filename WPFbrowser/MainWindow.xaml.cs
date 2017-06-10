@@ -242,7 +242,7 @@ namespace WPFbrowser
                     file.Close();
                     rightSide.AppendText(bufor);
                 }
-                if ((ext.Contains(".jpg")) || (ext.Contains(".png")))
+                if ((ext.Contains(".jpg")) || (ext.Contains(".png")) || (ext.Contains(".ico")))
                 {
                     showImage(path, rightSide);
                 }
@@ -310,19 +310,27 @@ namespace WPFbrowser
         //obliczanie rozmiaru katalogu
         private static long GetDirectorySize(string fullDirectoryPath)
         {
-            long startDirectorySize = 0;
-            if (!Directory.Exists(fullDirectoryPath))
-                return startDirectorySize; 
 
-            var currentDirectory = new DirectoryInfo(fullDirectoryPath);
-            
-            currentDirectory.GetFiles().ToList().ForEach(f => startDirectorySize += f.Length);
+            try
+            {
+                long startDirectorySize = 0;
+                if (!Directory.Exists(fullDirectoryPath))
+                    return startDirectorySize;
 
-            
-            currentDirectory.GetDirectories().ToList()
-                .ForEach(d => startDirectorySize += GetDirectorySize(d.FullName));
+                var currentDirectory = new DirectoryInfo(fullDirectoryPath);
 
-            return startDirectorySize; 
+                currentDirectory.GetFiles().ToList().ForEach(f => startDirectorySize += f.Length);
+
+                currentDirectory.GetDirectories().ToList()
+                    .ForEach(d => startDirectorySize += GetDirectorySize(d.FullName));
+
+                return startDirectorySize;
+            }
+            catch
+            {
+                return 0;
+            }
+
         }
 
     }
